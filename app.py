@@ -1,15 +1,15 @@
 from flask import Flask, request, Response
+from twilio.twiml.voice_response import VoiceResponse
 
 app = Flask(__name__)
 
-@app.route("/", methods=["POST"])
-def voice_handler():
-    """Basic call response"""
-    response = """<?xml version="1.0" encoding="UTF-8"?>
-    <Response>
-        <Say voice="alice">Hello, this is Azul Vision. How can we help you?</Say>
-    </Response>"""
-    return Response(response, mimetype='text/xml')
+@app.route("/voice", methods=["POST"])
+def voice():
+    response = VoiceResponse()
+    response.say("Hello, this is the Azul Vision after-hours assistant.")
+    return Response(str(response), mimetype="application/xml")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
